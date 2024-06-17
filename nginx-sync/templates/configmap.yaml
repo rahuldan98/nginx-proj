@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: cmlocal
-  namespace: {{ .Values.namespace.name }}
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
-data:
-  key1: value1

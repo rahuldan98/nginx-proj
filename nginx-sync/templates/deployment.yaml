@@ -7,7 +7,6 @@ metadata:
     app: nginx
     company: devseccops
   annotations:
-    argocd.argoproj.io/hook: ""
     argocd.argoproj.io/hook-delete-policy: HookSucceeded
     argocd.argoproj.io/sync-wave: "4"
 spec:
@@ -55,43 +54,4 @@ spec:
               port: http
             initialDelaySeconds: 10
             periodSeconds: 10
----
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: pre-sync-job
-  namespace: {{ .Values.namespace.name }}
-  annotations:
-    argocd.argoproj.io/hook: PreSync
-    argocd.argoproj.io/sync-wave: "3"
-spec:
-  template:
-    spec:
-      containers:
-        - name: pre-sync-job
-          image: alpine:latest
-          volumeMounts:
-            - name: config-volume
-              mountPath: /config
-      restartPolicy: OnFailure
-      volumes:
-        - name: config-volume
-          configMap:
-            name: cmlocal
----
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: post-sync-job
-  namespace: {{ .Values.namespace.name }}
-  annotations:
-    argocd.argoproj.io/hook: PostSync
-    argocd.argoproj.io/sync-wave: "5"
-spec:
-  template:
-    spec:
-      containers:
-        - name: post-sync-job
-          image: alpine:latest
-          command: ["sh", "-c", "echo PostSync Job"]
-      restartPolicy: OnFailure
+
